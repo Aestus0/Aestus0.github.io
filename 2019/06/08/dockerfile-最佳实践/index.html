@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+
+    
+
+    
+    <title>dockerfile 最佳实践 | Mr.Colin&#39;s Blog</title>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+        <meta name="keywords" content="devops docker">
+    
+    <meta name="description" content="DockerFile 最佳实践概述Docker通过读取DockerFile里面的内容自动build镜像。DockerFile是一个包含了build过程中需要执行的所有命令文件。 基本方针与建议容器应该要精简镜像生成的容器越精简越好：容器可以很容易的stop和destroy，也很容易创建新的容器，通过较少的配置就可以部署使用。 使用 .dockerignore文件想要快速的进行upload，或者提">
+<meta name="keywords" content="devops docker">
+<meta property="og:type" content="article">
+<meta property="og:title" content="dockerfile 最佳实践">
+<meta property="og:url" content="http://aestus.cn/2019/06/08/dockerfile-最佳实践/index.html">
+<meta property="og:site_name" content="Mr.Colin&#39;s Blog">
+<meta property="og:description" content="DockerFile 最佳实践概述Docker通过读取DockerFile里面的内容自动build镜像。DockerFile是一个包含了build过程中需要执行的所有命令文件。 基本方针与建议容器应该要精简镜像生成的容器越精简越好：容器可以很容易的stop和destroy，也很容易创建新的容器，通过较少的配置就可以部署使用。 使用 .dockerignore文件想要快速的进行upload，或者提">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://pssf2j165.bkt.clouddn.com/hIF_K6PRjko.jpg">
+<meta property="og:updated_time" content="2019-06-08T16:13:00.588Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="dockerfile 最佳实践">
+<meta name="twitter:description" content="DockerFile 最佳实践概述Docker通过读取DockerFile里面的内容自动build镜像。DockerFile是一个包含了build过程中需要执行的所有命令文件。 基本方针与建议容器应该要精简镜像生成的容器越精简越好：容器可以很容易的stop和destroy，也很容易创建新的容器，通过较少的配置就可以部署使用。 使用 .dockerignore文件想要快速的进行upload，或者提">
+<meta name="twitter:image" content="http://pssf2j165.bkt.clouddn.com/hIF_K6PRjko.jpg">
+    
+
+    
+        <link rel="alternate" href="/" title="Mr.Colin&#39;s Blog" type="application/atom+xml">
+    
+
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/libs/titillium-web/styles.css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/libs/jquery/3.3.1/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+        <link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+    
+    
+    
+
+
+</head>
+</html>
+<body>
+    <div id="wrap">
+        <header id="header">
+    <div id="header-outer" class="outer">
+        <div class="container">
+            <div class="container-inner">
+                <div id="header-title">
+                    <h1 class="logo-wrap">
+                        <a href="/" class="logo"></a>
+                    </h1>
+                    
+                </div>
+                <div id="header-inner" class="nav-container">
+                    <a id="main-nav-toggle" class="nav-icon fa fa-bars"></a>
+                    <div class="nav-container-inner">
+                        <ul id="main-nav">
+                            
+                                <li class="main-nav-list-item">
+                                    <a class="main-nav-list-link" href="/">主页</a>
+                                </li>
+                            
+                                        
+                                    
+                                <li class="main-nav-list-item">
+                                    <a class="main-nav-list-link" href="https://github.com/Aestus0">关于</a>
+                                </li>
+                            
+                        </ul>
+                        <nav id="sub-nav">
+                            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索">
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么...">
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+        <div class="container">
+            <div class="main-body container-inner">
+                <div class="main-body-inner">
+                    <section id="main">
+                        <div class="main-body-header">
+    <h1 class="header">
+    
+    未分类
+    </h1>
+</div>
+
+                        <div class="main-body-content">
+                            <article id="post-dockerfile-最佳实践" class="article article-single article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+        dockerfile 最佳实践
+        </h1>
+    
+
+            </header>
+        
+        
+            <div class="article-meta">
+                
+    <div class="article-date">
+        <a href="/2019/06/08/dockerfile-最佳实践/" class="article-date">
+            <time datetime="2019-06-08T15:57:40.000Z" itemprop="datePublished">2019-06-08</time>
+        </a>
+    </div>
+
+		
+
+                
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/devops-docker/">devops docker</a>
+    </div>
+
+            </div>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+            <p><img src="http://pssf2j165.bkt.clouddn.com/hIF_K6PRjko.jpg" alt></p>
+<h1 id="DockerFile-最佳实践"><a href="#DockerFile-最佳实践" class="headerlink" title="DockerFile 最佳实践"></a>DockerFile 最佳实践</h1><h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>Docker通过读取DockerFile里面的内容自动build镜像。DockerFile是一个包含了build过程中需要执行的所有命令文件。</p>
+<h2 id="基本方针与建议"><a href="#基本方针与建议" class="headerlink" title="基本方针与建议"></a>基本方针与建议</h2><h3 id="容器应该要精简"><a href="#容器应该要精简" class="headerlink" title="容器应该要精简"></a>容器应该要精简</h3><p>镜像生成的容器越精简越好：容器可以很容易的stop和destroy，也很容易创建新的容器，通过较少的配置就可以部署使用。</p>
+<h3 id="使用-dockerignore文件"><a href="#使用-dockerignore文件" class="headerlink" title="使用 .dockerignore文件"></a>使用 .dockerignore文件</h3><p>想要快速的进行upload，或者提高build的效率。那么建议使用.dockerignore文件。</p>
+<h3 id="避免安装不必要的包"><a href="#避免安装不必要的包" class="headerlink" title="避免安装不必要的包"></a>避免安装不必要的包</h3><p>减少build复杂度，软件依赖度，镜像大小和build时间。</p>
+<h3 id="一个容器只运行一个实例"><a href="#一个容器只运行一个实例" class="headerlink" title="一个容器只运行一个实例"></a>一个容器只运行一个实例</h3><p>在大部分情况下，尽量一个容器下只运行一个实例，将耦合的应用分别装到不同的容器，便于扩展和复用。如果容器之间存在依赖性，建议使用container linking。</p>
+<h3 id="最小化镜像层数"><a href="#最小化镜像层数" class="headerlink" title="最小化镜像层数"></a>最小化镜像层数</h3><p>要在DockerFile可读性和减少镜像层数量间取得平衡。</p>
+<h3 id="分割多行参数"><a href="#分割多行参数" class="headerlink" title="分割多行参数"></a>分割多行参数</h3><p>尽可能将安装的软件包安装顺序排列。避免重复安装。使用’&#39;进行分割，增强代码可读性。</p>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">RUN</span> apt-get update &amp;&amp; apt-get install -y \</span><br><span class="line">bzr\</span><br><span class="line">cvs\</span><br><span class="line">git\</span><br><span class="line">mercurial\</span><br><span class="line">subversion</span><br></pre></td></tr></table></figure>
+
+<h3 id="build-缓存"><a href="#build-缓存" class="headerlink" title="build 缓存"></a>build 缓存</h3><p>Docker在build 镜像的时候，会按照Dockerfile中规定的步骤依次执行。Docker执行每一条命令的时候都会去判断有没有存在的镜像层或者可以复用的镜像层。如果你不想使用cache中的数据，那么执行docker build时添加 –no-cache=true。</p>
+<p>cache规则：<br>    * 如果缓存中存在base image，那么递归检查dockerfile中所有的数据层定义是否和缓存中的base image数据层定义相同。如果不同，缓存数据无效。<br>    *  在大多数情况下，将dockerfile中的image数据层对比就足够了。<br>    *   针对ADD COPY 这些命令，docker会检查这些文件。每次计算文件的checksum。如果checksum不匹配，缓存中的文件就会失效。<br>    *   除了ADD COPY回去比对数据，其他命令不会比对，只会比较执行的命令字符串是否相同。</p>
+<p>一旦缓存中的数据失效了，那么该命令后的之后的所有命令都不会使用缓存的数据，而是生成新的数据层。</p>
+
+        </div>
+        <footer class="article-footer">
+            
+
+
+
+    <a data-url="http://aestus.cn/2019/06/08/dockerfile-最佳实践/" data-id="cjwos6ls40001oes67hl0gym2" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+<script>
+    (function ($) {
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+        </footer>
+    </div>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        "author": {
+            "@type": "Person",
+            "name": "Colin"
+        },
+        "headline": "dockerfile 最佳实践",
+        "image": "http://aestus.cnhttp://pssf2j165.bkt.clouddn.com/hIF_K6PRjko.jpg",
+        "keywords": "devops docker",
+        "genre": "",
+        "datePublished": "2019-06-08",
+        "dateCreated": "2019-06-08",
+        "dateModified": "2019-06-09",
+        "url": "http://aestus.cn/2019/06/08/dockerfile-最佳实践/",
+        "description": "
+DockerFile 最佳实践概述Docker通过读取DockerFile里面的内容自动build镜像。DockerFile是一个包含了build过程中需要执行的所有命令文件。
+基本方针与建议容器应该要精简镜像生成的容器越精简越好：容器可以很容易的stop和destroy，也很容易创建新的容器，通过较少的配置就可以部署使用。
+使用 .dockerignore文件想要快速的进行upload，或者提"
+        "wordCount": 107
+    }
+</script>
+
+</article>
+
+    <section id="comments">
+    
+        
+    <div id="disqus_thread">
+        <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+
+    
+    </section>
+
+
+
+                        </div>
+                    </section>
+                    <aside id="sidebar">
+    <a class="sidebar-toggle" title="Expand Sidebar"><i class="toggle icon"></i></a>
+    <div class="sidebar-top">
+        <p>关注我 :</p>
+        <ul class="social-links">
+            
+                
+                <li>
+                    <a class="social-tooltip" title="twitter" href="/" target="_blank" rel="noopener">
+                        <i class="icon fa fa-twitter"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="facebook" href="/" target="_blank" rel="noopener">
+                        <i class="icon fa fa-facebook"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="google-plus" href="/" target="_blank" rel="noopener">
+                        <i class="icon fa fa-google-plus"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="github" href="https://github.com/Aestus0" target="_blank" rel="noopener">
+                        <i class="icon fa fa-github"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="weibo" href="/" target="_blank" rel="noopener">
+                        <i class="icon fa fa-weibo"></i>
+                    </a>
+                </li>
+                
+            
+                
+                <li>
+                    <a class="social-tooltip" title="rss" href="/" target="_blank" rel="noopener">
+                        <i class="icon fa fa-rss"></i>
+                    </a>
+                </li>
+                
+            
+        </ul>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+    
+        <a href="/2019/06/07/Array的迭代/" id="article-nav-older" class="article-nav-link-wrap">
+        <strong class="article-nav-caption">上一篇</strong>
+        <p class="article-nav-title">Array的迭代</p>
+        <i class="icon fa fa-chevron-left" id="icon-chevron-left"></i>
+        </a>
+    
+</nav>
+
+    
+    <div class="widgets-container">
+        
+            
+                
+
+            
+                
+    <div class="widget-wrap">
+        <h3 class="widget-title">最新文章</h3>
+        <div class="widget">
+            <ul id="recent-post" class>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2019/06/08/dockerfile-最佳实践/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://pssf2j165.bkt.clouddn.com/hIF_K6PRjko.jpg)" alt="dockerfile 最佳实践" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"></p>
+                            <p class="item-title"><a href="/2019/06/08/dockerfile-最佳实践/" class="title">dockerfile 最佳实践</a></p>
+                            <p class="item-date"><time datetime="2019-06-08T15:57:40.000Z" itemprop="datePublished">2019-06-08</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2019/06/07/Array的迭代/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://pssf2j165.bkt.clouddn.com/h0aVmXTl2ZY.jpg)" alt="Array的迭代" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"></p>
+                            <p class="item-title"><a href="/2019/06/07/Array的迭代/" class="title">Array的迭代</a></p>
+                            <p class="item-date"><time datetime="2019-06-07T09:51:34.000Z" itemprop="datePublished">2019-06-07</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/2019/06/07/从零开始的LESS/" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://pssf2j165.bkt.clouddn.com/dBaz0xhCkPY.jpg)" alt="从零开始的LESS" class="thumbnail-image"></span>
+    
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"></p>
+                            <p class="item-title"><a href="/2019/06/07/从零开始的LESS/" class="title">从零开始的LESS</a></p>
+                            <p class="item-date"><time datetime="2019-06-07T09:27:24.000Z" itemprop="datePublished">2019-06-07</time></p>
+                        </div>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+            
+                
+
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">归档</h3>
+        <div class="widget">
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">六月 2019</a><span class="archive-list-count">3</span></li></ul>
+        </div>
+    </div>
+
+
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">标签</h3>
+        <div class="widget">
+            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/css/">css</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/devops-docker/">devops docker</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/js/">js</a><span class="tag-list-count">1</span></li></ul>
+        </div>
+    </div>
+
+
+            
+                
+    <div class="widget-wrap widget-float">
+        <h3 class="widget-title">标签云</h3>
+        <div class="widget tagcloud">
+            <a href="/tags/css/" style="font-size: 10px;">css</a> <a href="/tags/devops-docker/" style="font-size: 10px;">devops docker</a> <a href="/tags/js/" style="font-size: 10px;">js</a>
+        </div>
+    </div>
+
+
+            
+                
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">链接</h3>
+        <div class="widget">
+            <ul>
+                
+                    <li>
+                        <a href="http://hexo.io">Hexo</a>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+
+            
+        
+    </div>
+</aside>
+
+                </div>
+            </div>
+        </div>
+        <footer id="footer">
+    <div class="container">
+        <div class="container-inner">
+            <a id="back-to-top" href="javascript:;"><i class="icon fa fa-angle-up"></i></a>
+            <div class="credit">
+                <h1 class="logo-wrap">
+                    <a href="/" class="logo"></a>
+                </h1>
+                <p>&copy; 2019 Colin</p>
+                <p>Powered by <a href="//hexo.io/" target="_blank">Hexo</a>. Theme by <a href="//github.com/ppoffice" target="_blank">PPOffice</a></p>
+            </div>
+            <div class="footer-plugins">
+              
+    
+
+
+            </div>
+        </div>
+    </div>
+</footer>
+
+        
+    
+    <script>
+    var disqus_shortname = 'hexo-theme-hueman';
+    
+    
+    var disqus_url = 'http://aestus.cn/2019/06/08/dockerfile-最佳实践/';
+    
+    (function() {
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+    </script>
+
+
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+        <script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+    
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div>
+</body>
+</html>
