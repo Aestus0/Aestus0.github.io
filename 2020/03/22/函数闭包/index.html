@@ -20,7 +20,7 @@
 <meta property="og:site_name" content="Mr.Colin&#39;s Blog">
 <meta property="og:description" content="函数闭包定义简单来说，当一个内部函数被保存到外部时，将会生成闭包。生成闭包后，依旧可以访问其所在的外部函数的变量。 详细解释：当函数执行时，会创建一个称为执行期上下文的内部对象（AO），执行期上下文定义了一个函数执行时的环境。 函数还会获得它所在作用域的作用域链，是存储函数能够访问的所有执行期上下文对象的集合，即这个函数中能够访问到的东西都是沿着作用域链向上查找直到全局作用域。 函数每次执行时对应">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2020-03-22T09:07:54.942Z">
+<meta property="og:updated_time" content="2020-05-24T14:24:40.817Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="函数闭包">
 <meta name="twitter:description" content="函数闭包定义简单来说，当一个内部函数被保存到外部时，将会生成闭包。生成闭包后，依旧可以访问其所在的外部函数的变量。 详细解释：当函数执行时，会创建一个称为执行期上下文的内部对象（AO），执行期上下文定义了一个函数执行时的环境。 函数还会获得它所在作用域的作用域链，是存储函数能够访问的所有执行期上下文对象的集合，即这个函数中能够访问到的东西都是沿着作用域链向上查找直到全局作用域。 函数每次执行时对应">
@@ -188,7 +188,6 @@
 </ol>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Counter</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">   <span class="keyword">let</span> count = <span class="number">0</span>;</span><br><span class="line">   <span class="keyword">this</span>.plus = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">      <span class="keyword">return</span> ++count;</span><br><span class="line">   &#125;</span><br><span class="line">   <span class="keyword">this</span>.minus = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">      <span class="keyword">return</span> --count;</span><br><span class="line">   &#125;</span><br><span class="line">   <span class="keyword">this</span>.getCount = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">      <span class="keyword">return</span> count;</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> counter = <span class="keyword">new</span> Counter();</span><br><span class="line">counter.puls();</span><br><span class="line">counter.puls();</span><br><span class="line"><span class="built_in">console</span>.log(counter.getCount())</span><br></pre></td></tr></table></figure>
 
-<p>2.缓存</p>
 
         </div>
         <footer class="article-footer">
@@ -196,7 +195,7 @@
 
 
 
-    <a data-url="http://aestus.cn/2020/03/22/函数闭包/" data-id="ck82tjbxk000dbvs69u7x71wa" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
+    <a data-url="http://aestus.cn/2020/03/22/函数闭包/" data-id="ckal5li3m0009nos6yzjnz86o" class="article-share-link"><i class="fa fa-share"></i>分享到</a>
 <script>
     (function ($) {
         $('body').on('click', function() {
@@ -272,7 +271,7 @@
         "genre": "",
         "datePublished": "2020-03-22",
         "dateCreated": "2020-03-22",
-        "dateModified": "2020-03-22",
+        "dateModified": "2020-05-24",
         "url": "http://aestus.cn/2020/03/22/函数闭包/",
         "description": "函数闭包定义简单来说，当一个内部函数被保存到外部时，将会生成闭包。生成闭包后，依旧可以访问其所在的外部函数的变量。
 详细解释：当函数执行时，会创建一个称为执行期上下文的内部对象（AO），执行期上下文定义了一个函数执行时的环境。
